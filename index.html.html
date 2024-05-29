@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protege coleta de oleo - Formulario Residência</title>
+    <style>
+        .success-message {
+            display: none;
+            color: green;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Protege Coleta de Óleo - Formulario Residência</h1>
+    <form id="infoForm">
+        <div>
+            <label for="Nome">Nome:</label>
+            <input type="text" id="Nome" name="Nome" required>
+        </div>
+        <br>
+	 <div>
+			<label for="Endereco">Endereco:</label>
+            <input type="text" id="Endereco" name="Endereco" required>
+
+        </div>
+        <br>
+        <div>
+            <label for="Contato">Contato:</label>
+            <input type="text" id="Contato" name="Contato" required>
+        </div>
+        <br>
+        <div>
+            <label for="Email">Email:</label>
+            <input type="Email" id="Email" name="Email" required>
+        </div>
+        <br>
+        <div>
+            <label for="Data_retirada">Data de Retirada:</label>
+            <input type="date" id="Data_retirada" name="Data_retirada" required>
+        </div>
+        <br>
+        <div>
+            <label for="Observações">Observações:</label>
+            <textarea id="Observações" name="Observações" rows="4" cols="50" required></textarea>
+        </div>
+        <br>
+        <div>
+            <button type="submit">Enviar Solicitação</button>
+        </div>
+    </form>
+    <div class="success-message" id="successMessage">
+        Formulário enviado com sucesso!
+    </div>
+
+    <!-- Firebase JS SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js"></script>
+    
+    <script>
+        // Sua configuração Firebase aqui
+        const firebaseConfig = {
+            apiKey: "AIzaSyDO3Q14sYykXeqlfduREeFVUAma2_fzx4o",
+            authDomain: "limpeza-de-residuos.firebaseapp.com",
+            databaseURL: "https://limpeza-de-residuos-default-rtdb.firebaseio.com",
+            projectId: "limpeza-de-residuos",
+            storageBucket: "limpeza-de-residuos.appspot.com",
+            messagingSenderId: "155215317911",
+            appId: "1:155215317911:web:1030da10d239121c2b52d2"
+        };
+        
+        // Inicializar Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        document.getElementById('infoForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            const Nome = document.getElementById('Nome').value;
+            const Endereco = document.getElementById('Endereco').value;
+			const Contato= document.getElementById('Contato').value;
+            const data_retirada = document.getElementById('Data_retirada').value;
+            const Email = document.getElementById('Email').value;
+            const Observações = document.getElementById('Observações').value;
+            
+            // Enviar dados para o Firebase Realtime Database
+            database.ref('formSubmissions').push({
+                Nome: Nome,
+                Endereco: Endereco,
+				Contato: Contato,
+                Data_retirada: Data_retirada,
+                Email: Email,
+                Observações: Observações
+            }, function(error) {
+                if (error) {
+                    // Tratar o erro
+                    alert('Erro ao enviar formulário: ' + error.message);
+                } else {
+                    // Mostrar mensagem de sucesso
+                    document.getElementById('successMessage').style.display = 'block';
+                    document.getElementById('infoForm').reset();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
